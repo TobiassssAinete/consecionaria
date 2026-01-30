@@ -1,0 +1,5 @@
+{
+  "name": "Copy of Gestor Integral – Concesionaria Familiar",
+  "description": "A robust internal management system for a used car dealership in Argentina, featuring catalog-driven data entry, strict legal document enforcement for sales via RPC, and one-click Excel exports.",
+  "requestFramePermissions": []
+}
