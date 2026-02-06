@@ -240,3 +240,41 @@ BEGIN
     INSERT INTO catalog_trims (model_id, name) VALUES (v_model_id, 'Luxury') ON CONFLICT (model_id, name) DO NOTHING;
 
 END $$;
+
+-- ==========================================
+-- 4. USUARIOS INICIALES (PERSONAL)
+-- ==========================================
+DO $$
+DECLARE
+    v_user_id UUID;
+BEGIN
+    -- Usuario 1: totoainet@gmail.com
+    IF NOT EXISTS (SELECT 1 FROM auth.users WHERE email = 'totoainet@gmail.com') THEN
+        INSERT INTO auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at, recovery_sent_at, last_sign_in_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+        VALUES ('00000000-0000-0000-0000-000000000000', gen_random_uuid(), 'authenticated', 'authenticated', 'totoainet@gmail.com', crypt('Tobiascapobianco06', gen_salt('bf')), now(), now(), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), '', '', '', '')
+        RETURNING id INTO v_user_id;
+        
+        INSERT INTO auth.identities (id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
+        VALUES (gen_random_uuid(), v_user_id, format('{"sub":"%s","email":"%s"}', v_user_id, 'totoainet@gmail.com')::jsonb, 'email', now(), now(), now());
+    END IF;
+
+    -- Usuario 2: Jainete@montironi.com
+    IF NOT EXISTS (SELECT 1 FROM auth.users WHERE email = 'Jainete@montironi.com') THEN
+        INSERT INTO auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at, recovery_sent_at, last_sign_in_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+        VALUES ('00000000-0000-0000-0000-000000000000', gen_random_uuid(), 'authenticated', 'authenticated', 'Jainete@montironi.com', crypt('hijos1515', gen_salt('bf')), now(), now(), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), '', '', '', '')
+        RETURNING id INTO v_user_id;
+        
+        INSERT INTO auth.identities (id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
+        VALUES (gen_random_uuid(), v_user_id, format('{"sub":"%s","email":"%s"}', v_user_id, 'Jainete@montironi.com')::jsonb, 'email', now(), now(), now());
+    END IF;
+
+    -- Usuario 3: lautiainete@gmail.com
+    IF NOT EXISTS (SELECT 1 FROM auth.users WHERE email = 'lautiainete@gmail.com') THEN
+        INSERT INTO auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at, recovery_sent_at, last_sign_in_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+        VALUES ('00000000-0000-0000-0000-000000000000', gen_random_uuid(), 'authenticated', 'authenticated', 'lautiainete@gmail.com', crypt('Lautaro 04', gen_salt('bf')), now(), now(), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), '', '', '', '')
+        RETURNING id INTO v_user_id;
+        
+        INSERT INTO auth.identities (id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
+        VALUES (gen_random_uuid(), v_user_id, format('{"sub":"%s","email":"%s"}', v_user_id, 'lautiainete@gmail.com')::jsonb, 'email', now(), now(), now());
+    END IF;
+END $$;

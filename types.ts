@@ -39,11 +39,12 @@ export interface Vehicle {
   suggested_price?: number;
   list_price?: number;
   status: VehicleStatus;
+  entry_date: string; // Fecha de toma manual
   sold_at?: string;
   sold_price?: number;
   created_at: string;
   updated_at: string;
-  image_urls?: string[]; // Array de URLs de imágenes
+  image_urls?: string[];
   
   // Joined fields
   catalog_brands?: { name: string };

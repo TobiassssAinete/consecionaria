@@ -6,12 +6,8 @@ import { useAuth } from '../lib/auth';
 import CatalogSelect from '../components/CatalogSelect';
 import ImageUpload from '../components/ImageUpload';
 import { cn, formatNumberForInput, parseCurrencyString } from '../lib/utils';
-import { ArrowLeft, Save, AlertCircle, Camera, DollarSign, TrendingUp, Info, BarChart4, Zap } from 'lucide-react';
+import { ArrowLeft, Save, AlertCircle, Camera, DollarSign, TrendingUp, Info, BarChart4, Zap, Calendar } from 'lucide-react';
 
-/**
- * COMPONENTE DE INPUT FINANCIERO (DEFINIDO AFUERA PARA EVITAR RE-MOUNTS)
- * Ahora permite escribir de corrido sin saltos de cursor ni pérdida de foco.
- */
 interface FinancialInputProps {
   label: string;
   value: number;
@@ -34,18 +30,11 @@ const FinancialInput: React.FC<FinancialInputProps> = ({ label, value, onChange,
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target;
     const rawValue = input.value;
-    
-    // Guardamos posición actual del cursor
     const selectionStart = input.selectionStart || 0;
-    
-    // Contamos puntos antes de la edición
     const dotsBefore = (rawValue.substring(0, selectionStart).match(/\./g) || []).length;
-    
-    // Obtenemos el número real
     const numericValue = parseCurrencyString(rawValue);
     onChange(numericValue);
 
-    // Reajustamos cursor después de que React actualice el DOM
     setTimeout(() => {
       if (inputRef.current) {
         const newValue = inputRef.current.value;
@@ -123,7 +112,8 @@ const VehicleForm: React.FC = () => {
     zero_km_price: 0,
     suggested_price: 0,
     list_price: 0,
-    image_urls: [] as string[]
+    image_urls: [] as string[],
+    entry_date: new Date().toISOString().split('T')[0] // Default hoy
   });
 
   useEffect(() => {
@@ -151,7 +141,8 @@ const VehicleForm: React.FC = () => {
         zero_km_price: Number(data.zero_km_price || 0),
         suggested_price: Number(data.suggested_price || 0),
         list_price: Number(data.list_price || 0),
-        image_urls: data.image_urls || []
+        image_urls: data.image_urls || [],
+        entry_date: data.entry_date || new Date().toISOString().split('T')[0]
       });
     }
     setLoading(false);
@@ -241,7 +232,7 @@ const VehicleForm: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                   <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Año</label>
                   <input
@@ -265,6 +256,18 @@ const VehicleForm: React.FC = () => {
                     />
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-300 uppercase">KM</span>
                   </div>
+                </div>
+                <div>
+                  <label className="text-[11px] font-black text-blue-600 uppercase tracking-widest mb-2 block flex items-center gap-1">
+                    <Calendar size={12} /> Fecha de Toma
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.entry_date}
+                    onChange={(e) => setFormData({ ...formData, entry_date: e.target.value })}
+                    required
+                    className="w-full bg-blue-50 border-2 border-blue-50 p-3 rounded-xl focus:border-blue-500 focus:bg-white transition-all font-black text-lg outline-none text-blue-900"
+                  />
                 </div>
               </div>
             </div>
@@ -294,33 +297,6 @@ const VehicleForm: React.FC = () => {
                   icon={TrendingUp}
                   colorClass={{ bg: 'bg-emerald-600', text: 'text-white', border: 'border-emerald-600', ring: 'ring-emerald-500', textInput: 'text-emerald-900' }}
                 />
-
-                <div className="grid grid-cols-1 gap-4 pt-4 border-t border-slate-50">
-                   <FinancialInput 
-                    label="InfoAuto" 
-                    value={formData.info_price} 
-                    onChange={(v: number) => setFormData({ ...formData, info_price: v })}
-                    small
-                    colorClass={{ bg: 'bg-slate-100', text: 'text-slate-500', border: 'border-slate-200', ring: 'ring-slate-400', textInput: 'text-slate-700' }}
-                  />
-                  
-                  <FinancialInput 
-                    label="Precio 0km" 
-                    value={formData.zero_km_price} 
-                    onChange={(v: number) => setFormData({ ...formData, zero_km_price: v })}
-                    small
-                    colorClass={{ bg: 'bg-slate-100', text: 'text-slate-500', border: 'border-slate-200', ring: 'ring-slate-400', textInput: 'text-slate-700' }}
-                  />
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-slate-50 space-y-3">
-                <div className="flex justify-between items-center text-xs font-bold">
-                  <span className="text-slate-400 uppercase tracking-widest">Utilidad Bruta</span>
-                  <span className="text-emerald-600 font-mono text-base font-black">
-                    ${(formData.list_price - formData.take_price).toLocaleString('es-AR')}
-                  </span>
-                </div>
               </div>
 
               <button

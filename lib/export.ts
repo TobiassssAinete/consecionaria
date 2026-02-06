@@ -20,7 +20,8 @@ export const exportVehiclesToExcel = (vehicles: Vehicle[], expensesMap?: Record<
       'Inversión Total': totalInvestment,
       'Precio Lista': v.list_price || 0,
       'Estado': v.status === 'in_stock' ? 'En Stock' : v.status === 'reserved' ? 'Reservado' : 'Vendido',
-      'Fecha Ingreso': formatDate(v.created_at),
+      'Fecha Toma': formatDate(v.entry_date), // Usamos entry_date
+      'Fecha Carga Sistema': formatDate(v.created_at),
     };
   });
 
