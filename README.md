@@ -1,0 +1,39 @@
+
+# Gestor Integral – Concesionaria Familiar
+
+Sistema de gestión interna robusto para concesionarias de autos usados, diseñado para reemplazar planillas Excel con una estructura de datos normalizada y cumplimiento legal estricto.
+
+## 🚀 Configuración Inicial
+
+### 1. Supabase (Base de Datos y Auth)
+1. Crea un nuevo proyecto en [Supabase](https://supabase.com).
+2. Ejecuta los scripts en el Editor SQL en este orden:
+   - `supabase/schema.sql`
+   - `supabase/rpc.sql`
+   - `supabase/triggers.sql`
+   - `supabase/seed.sql`
+3. Ve a `Authentication > Providers` y asegúrate de que **Email** esté habilitado.
+
+### 2. Creación de Usuarios (Acceso al Sistema)
+Al ser una herramienta interna, no hay registro público. Debes crear los usuarios manualmente:
+1. En el Dashboard de Supabase, ve a **Authentication > Users**.
+2. Haz clic en **Add User > Create new user**.
+3. Ingresa el email y contraseña de los empleados/familiares.
+4. Con esas credenciales podrán acceder a la pantalla de inicio de la app.
+
+## 💻 Variables de Entorno
+Configura las siguientes variables en tu entorno (o archivo `.env`):
+- `VITE_SUPABASE_URL`: URL de tu proyecto.
+- `VITE_SUPABASE_ANON_KEY`: Clave anónima (Anon Key).
+
+## 🛠️ Ejecución
+```bash
+npm install
+npm run dev
+```
+
+## ✅ Checklist de Verificación
+1. **Login:** Crea un usuario en Supabase e intenta entrar.
+2. **Catálogos:** Verifica que existan marcas y modelos precargados.
+3. **Validación de Venta:** Crea un auto, intenta venderlo sin documentos OK; el sistema debe bloquearlo.
+4. **Exportación:** Genera un Excel y verifica que los datos sean legibles.
