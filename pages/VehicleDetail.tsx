@@ -22,7 +22,6 @@ import {
   ChevronRight,
   TrendingUp,
   ArrowUpCircle,
-<<<<<<< HEAD
   Calendar,
   AlertCircle,
   CheckCircle2,
@@ -30,9 +29,6 @@ import {
   X,
   Trash2,
   AlertTriangle
-=======
-  Calendar
->>>>>>> c82153d3ca4695a7d8ade673e0237e3d8e120c70
 } from 'lucide-react';
 import { formatCurrency, formatDate, cn } from '../lib/utils';
 import TrafficLight from '../components/TrafficLight';
@@ -52,10 +48,7 @@ const VehicleDetail: React.FC = () => {
   // Modal States
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showSellModal, setShowSellModal] = useState(false);
-<<<<<<< HEAD
   const [expenseToDelete, setExpenseToDelete] = useState<VehicleExpense | null>(null);
-=======
->>>>>>> c82153d3ca4695a7d8ade673e0237e3d8e120c70
   
   // Venta State
   const [salePrice, setSalePrice] = useState(0);
@@ -74,11 +67,7 @@ const VehicleDetail: React.FC = () => {
       supabase.from('vehicles').select('*, catalog_brands(name), catalog_models(name), catalog_trims(name), catalog_fuels(name), catalog_transmissions(name), catalog_colors(name)').eq('id', id).single(),
       supabase.from('vehicle_documents').select('*, catalog_doc_types(*)').eq('vehicle_id', id),
       supabase.from('catalog_doc_types').select('*').eq('is_active', true).order('is_critical', { ascending: false }),
-<<<<<<< HEAD
       supabase.from('vehicle_expenses').select('*, catalog_expense_types(name)').eq('vehicle_id', id).order('expense_date', { ascending: false }),
-=======
-      supabase.from('vehicle_expenses').select('*, catalog_expense_types(name)').eq('vehicle_id', id),
->>>>>>> c82153d3ca4695a7d8ade673e0237e3d8e120c70
       supabase.from('catalog_expense_types').select('*').eq('is_active', true).order('name')
     ]);
 
@@ -124,7 +113,6 @@ const VehicleDetail: React.FC = () => {
     }
   };
 
-<<<<<<< HEAD
   const confirmDeleteExpense = async () => {
     if (!expenseToDelete) return;
 
@@ -137,8 +125,6 @@ const VehicleDetail: React.FC = () => {
     }
   };
 
-=======
->>>>>>> c82153d3ca4695a7d8ade673e0237e3d8e120c70
   const handleSell = async () => {
     if (!vehicle || !id) return;
     setSelling(true);
@@ -157,17 +143,12 @@ const VehicleDetail: React.FC = () => {
       setShowSellModal(false);
       fetchData();
       setSelling(false);
-<<<<<<< HEAD
-=======
-      alert("¡Venta realizada con éxito!");
->>>>>>> c82153d3ca4695a7d8ade673e0237e3d8e120c70
     }
   };
 
   if (loading || !vehicle) return (
     <div className="h-full flex flex-col items-center justify-center gap-4">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-<<<<<<< HEAD
       <p className="text-slate-400 font-black uppercase text-xs tracking-widest italic">Actualizando Balance Real...</p>
     </div>
   );
@@ -179,16 +160,6 @@ const VehicleDetail: React.FC = () => {
   const referencePrice = vehicle.status === 'sold' ? Number(vehicle.sold_price) : Number(vehicle.list_price);
   const margin = referencePrice - totalInvestment;
   const roi = totalInvestment > 0 ? (margin / totalInvestment) * 100 : 0;
-=======
-      <p className="text-slate-400 font-black uppercase text-xs tracking-widest">Cargando...</p>
-    </div>
-  );
-
-  const totalExpenses = expenses.reduce((acc, curr) => acc + Number(curr.amount), 0);
-  const totalInvestment = Number(vehicle.take_price) + totalExpenses;
-  const projectedMargin = Number(vehicle.list_price) - totalInvestment;
-  const projectedROI = totalInvestment > 0 ? (projectedMargin / totalInvestment) * 100 : 0;
->>>>>>> c82153d3ca4695a7d8ade673e0237e3d8e120c70
   
   const criticalTypes = docTypes.filter(dt => dt.is_critical);
   const canSell = criticalTypes.every(ct => {
@@ -202,7 +173,6 @@ const VehicleDetail: React.FC = () => {
 
   return (
     <div className="space-y-8 pb-20 animate-in fade-in duration-500">
-<<<<<<< HEAD
       {/* HEADER */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -221,19 +191,6 @@ const VehicleDetail: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* GALERÍA */}
-=======
-      <div className="flex items-center gap-4">
-        <button onClick={() => navigate('/inventory')} className="p-3 bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 transition shadow-sm">
-          <ArrowLeft size={24} className="text-slate-600" />
-        </button>
-        <div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Detalle de Unidad</h2>
-          <p className="text-sm text-slate-500 font-bold uppercase tracking-widest">{vehicle.plate}</p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
->>>>>>> c82153d3ca4695a7d8ade673e0237e3d8e120c70
         <div className="lg:col-span-2 space-y-4">
            <div className="relative aspect-video rounded-[2.5rem] overflow-hidden bg-slate-100 shadow-2xl group border-4 border-white">
               <img src={images[currentImgIdx]} alt="Vehículo" className="w-full h-full object-cover" />
@@ -246,10 +203,7 @@ const VehicleDetail: React.FC = () => {
            </div>
         </div>
 
-<<<<<<< HEAD
         {/* PANEL DE CONTROL DE VENTA */}
-=======
->>>>>>> c82153d3ca4695a7d8ade673e0237e3d8e120c70
         <div className="space-y-6">
           <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm space-y-6">
              <div className="flex items-center justify-between">
@@ -259,7 +213,6 @@ const VehicleDetail: React.FC = () => {
                 )}>{vehicle.status === 'in_stock' ? 'En Stock' : 'Vendido'}</span>
                 <TrafficLight documents={documents} docTypes={docTypes} />
              </div>
-<<<<<<< HEAD
              
              <div className="p-5 bg-emerald-50 rounded-2xl border border-emerald-100">
                 <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1">Precio Publicado</p>
@@ -310,49 +263,10 @@ const VehicleDetail: React.FC = () => {
                 activeTab === tab.id ? "bg-white text-blue-600 shadow-sm" : "text-slate-400 hover:text-slate-600"
               )}
             >
-=======
-             <div>
-                <h2 className="text-4xl font-black text-slate-900 tracking-tighter leading-none mb-2">{vehicle.catalog_brands?.name} {vehicle.catalog_models?.name}</h2>
-                <p className="text-slate-400 font-bold uppercase text-xs tracking-widest">{vehicle.catalog_trims?.name}</p>
-             </div>
-             <div className="p-5 bg-emerald-50 rounded-2xl border border-emerald-100">
-                <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1">Precio de Lista</p>
-                <p className="text-4xl font-black text-emerald-900 font-mono tracking-tighter">{formatCurrency(vehicle.list_price)}</p>
-             </div>
-             {vehicle.status === 'in_stock' && (
-                <div className="space-y-3">
-                  <button 
-                    onClick={() => setShowSellModal(true)} 
-                    disabled={!canSell} 
-                    className={cn(
-                      "w-full py-5 rounded-[1.5rem] font-black text-sm uppercase tracking-widest shadow-xl transition transform hover:-translate-y-1", 
-                      canSell ? "bg-slate-900 text-white hover:bg-slate-800" : "bg-slate-100 text-slate-400 cursor-not-allowed"
-                    )}
-                  >
-                    <ShoppingBag size={20} className="inline mr-2 mb-1" /> Realizar Venta
-                  </button>
-                  {!canSell && <p className="text-[9px] text-red-500 font-black uppercase text-center tracking-widest">Bloqueado: Revisar Documentación Crítica</p>}
-                </div>
-             )}
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
-        <nav className="flex bg-slate-50/50 p-2 border-b border-slate-100">
-          {[
-            { id: 'info', label: 'Ficha Técnica', icon: Info }, 
-            { id: 'docs', label: 'Documentación', icon: FileText }, 
-            { id: 'expenses', label: 'Gastos', icon: DollarSign }, 
-            { id: 'profit', label: 'Balance', icon: TrendingUp }
-          ].map(tab => (
-            <button key={tab.id} onClick={() => setActiveTab(tab.id as any)} className={cn("flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition", activeTab === tab.id ? "bg-white text-blue-600 shadow-sm" : "text-slate-400 hover:text-slate-600")}>
->>>>>>> c82153d3ca4695a7d8ade673e0237e3d8e120c70
               <tab.icon size={16} /> {tab.label}
             </button>
           ))}
         </nav>
-<<<<<<< HEAD
 
         <div className="p-10">
           {activeTab === 'info' && (
@@ -532,31 +446,10 @@ const VehicleDetail: React.FC = () => {
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Precio de Equilibrio (Break-Even)</p>
                   <p className="text-3xl font-black font-mono text-blue-400">{formatCurrency(totalInvestment)}</p>
                   <p className="text-[9px] text-slate-500 font-bold mt-1 uppercase">A este precio no hay ganancia ni pérdida</p>
-=======
-        <div className="p-10">
-          {activeTab === 'info' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              <div className="space-y-6">
-                <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-widest border-b pb-2">Especificaciones</h4>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div><p className="text-[9px] font-bold text-slate-400 uppercase">Motor</p><p className="font-black">{vehicle.catalog_fuels?.name}</p></div>
-                  <div><p className="text-[9px] font-bold text-slate-400 uppercase">Caja</p><p className="font-black">{vehicle.catalog_transmissions?.name}</p></div>
-                  <div><p className="text-[9px] font-bold text-slate-400 uppercase">Año</p><p className="font-black">{vehicle.year}</p></div>
-                  <div><p className="text-[9px] font-bold text-slate-400 uppercase">KM</p><p className="font-black">{vehicle.mileage.toLocaleString()}</p></div>
-                </div>
-              </div>
-              <div className="space-y-6">
-                <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-widest border-b pb-2">Fechas y Costos</h4>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div><p className="text-[9px] font-bold text-blue-600 uppercase">Fecha de Toma</p><p className="font-black text-blue-900 flex items-center gap-1"><Calendar size={12}/> {formatDate(vehicle.entry_date)}</p></div>
-                  <div><p className="text-[9px] font-bold text-slate-400 uppercase">Publicado</p><p className="font-black text-emerald-600">{formatCurrency(vehicle.list_price)}</p></div>
-                  <div><p className="text-[9px] font-bold text-slate-400 uppercase">Costo Toma</p><p className="font-black text-blue-600">{formatCurrency(vehicle.take_price)}</p></div>
->>>>>>> c82153d3ca4695a7d8ade673e0237e3d8e120c70
                 </div>
               </div>
             </div>
           )}
-<<<<<<< HEAD
         </div>
       </div>
 
@@ -690,12 +583,6 @@ const VehicleDetail: React.FC = () => {
           </div>
         </div>
       )}
-=======
-          {/* ... resto de tabs ... */}
-        </div>
-      </div>
-      {/* ... modales ... */}
->>>>>>> c82153d3ca4695a7d8ade673e0237e3d8e120c70
     </div>
   );
 };
