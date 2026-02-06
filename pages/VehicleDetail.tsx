@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { 
@@ -30,7 +30,7 @@ import {
   Trash2,
   AlertTriangle
 } from 'lucide-react';
-import { formatCurrency, formatDate, cn } from '../lib/utils';
+import { formatCurrency, formatDate, cn, formatNumberForInput, parseCurrencyString } from '../lib/utils';
 import TrafficLight from '../components/TrafficLight';
 
 const VehicleDetail: React.FC = () => {
@@ -49,6 +49,10 @@ const VehicleDetail: React.FC = () => {
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showSellModal, setShowSellModal] = useState(false);
   const [expenseToDelete, setExpenseToDelete] = useState<VehicleExpense | null>(null);
+  
+  // Expense Form State
+  const [expenseAmount, setExpenseAmount] = useState<number>(0);
+  const expenseInputRef = useRef<HTMLInputElement>(null);
   
   // Venta State
   const [salePrice, setSalePrice] = useState(0);
@@ -99,14 +103,20 @@ const VehicleDetail: React.FC = () => {
     const payload = {
       vehicle_id: id,
       expense_type_id: formData.get('expense_type_id') as string,
-      amount: Number(formData.get('amount')),
+      amount: expenseAmount,
       expense_date: formData.get('expense_date') as string,
       notes: formData.get('notes') as string,
     };
 
+    if (payload.amount <= 0) {
+      alert("El importe debe ser mayor a 0.");
+      return;
+    }
+
     const { error } = await supabase.from('vehicle_expenses').insert(payload);
     if (!error) {
       setShowExpenseModal(false);
+      setExpenseAmount(0);
       fetchData();
     } else {
       alert(error.message);
@@ -144,6 +154,25 @@ const VehicleDetail: React.FC = () => {
       fetchData();
       setSelling(false);
     }
+  };
+
+  const handleExpenseAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value;
+    const selectionStart = e.target.selectionStart || 0;
+    const dotsBefore = (rawValue.substring(0, selectionStart).match(/\./g) || []).length;
+    
+    const numericValue = parseCurrencyString(rawValue);
+    setExpenseAmount(numericValue);
+
+    setTimeout(() => {
+      if (expenseInputRef.current) {
+        const newValue = expenseInputRef.current.value;
+        const dotsAfter = (newValue.substring(0, selectionStart).match(/\./g) || []).length;
+        const diff = dotsAfter - dotsBefore;
+        const newPos = selectionStart + diff;
+        expenseInputRef.current.setSelectionRange(newPos, newPos);
+      }
+    }, 0);
   };
 
   if (loading || !vehicle) return (
@@ -339,7 +368,10 @@ const VehicleDetail: React.FC = () => {
                   <p className="text-xs text-slate-500 font-bold mt-1">Suma Total Arreglos: {formatCurrency(totalExpenses)}</p>
                 </div>
                 <button 
-                  onClick={() => setShowExpenseModal(true)} 
+                  onClick={() => {
+                    setExpenseAmount(0);
+                    setShowExpenseModal(true);
+                  }} 
                   className="px-6 py-3 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl hover:bg-slate-800 transition transform hover:-translate-y-1"
                 >
                   <Plus size={16} className="inline mr-2" /> Cargar Nuevo Gasto
@@ -513,7 +545,16 @@ const VehicleDetail: React.FC = () => {
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Importe Neto ($)</label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-red-600">$</span>
-                  <input name="amount" type="number" step="1" required className="w-full bg-slate-50 border-none p-4 pl-8 rounded-xl font-black text-red-600 font-mono text-lg outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="0" />
+                  <input 
+                    ref={expenseInputRef}
+                    type="text"
+                    inputMode="numeric"
+                    required 
+                    value={expenseAmount === 0 ? '' : formatNumberForInput(expenseAmount)}
+                    onChange={handleExpenseAmountChange}
+                    className="w-full bg-slate-50 border-none p-4 pl-8 rounded-xl font-black text-red-600 font-mono text-lg outline-none focus:ring-2 focus:ring-blue-500 transition" 
+                    placeholder="0" 
+                  />
                 </div>
               </div>
               <div className="space-y-1">
